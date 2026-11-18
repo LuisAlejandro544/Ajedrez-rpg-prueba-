@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g stroke="#221E1B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Almenas de la torre -->
+    <path d="M32 24 H44 V34 H56 V24 H72 V34 H84 V24 H96 V46 L88 54 V84 H40 V54 L32 46 Z" fill="#FAF6EE"/>
+    <!-- Lineas de detalle -->
+    <line x1="34" y1="46" x2="94" y2="46" stroke-width="3.2"/>
+    <line x1="40" y1="54" x2="88" y2="54" stroke-width="3.2"/>
+    <line x1="48" y1="60" x2="48" y2="80" stroke="#CBBFA8" stroke-width="3.5"/>
+    <line x1="80" y1="60" x2="80" y2="80" stroke="#CBBFA8" stroke-width="3.5"/>
+    <!-- Base -->
+    <rect x="34" y="84" width="60" height="10" rx="3" fill="#EFE8D8"/>
+    <path d="M30 94 H98 L102 108 H26 Z" fill="#FAF6EE"/>
+    <rect x="22" y="108" width="84" height="8" rx="4" fill="#EFE8D8"/>
+  </g>
+</svg>

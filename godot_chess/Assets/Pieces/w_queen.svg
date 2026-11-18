@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g stroke="#221E1B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Orbes de la corona -->
+    <circle cx="22" cy="36" r="5.5" fill="#FAF6EE"/>
+    <circle cx="42" cy="26" r="5.5" fill="#FAF6EE"/>
+    <circle cx="64" cy="22" r="6" fill="#FAF6EE"/>
+    <circle cx="86" cy="26" r="5.5" fill="#FAF6EE"/>
+    <circle cx="106" cy="36" r="5.5" fill="#FAF6EE"/>
+    <!-- Corona de cinco puntas -->
+    <path d="M24 42 L38 82 H90 L104 42 L85 64 L85 32 L68 60 L64 28 L60 60 L43 32 L43 64 Z" fill="#FAF6EE"/>
+    <!-- Sombra y banda -->
+    <path d="M40 76 Q64 70 88 76" fill="none" stroke="#CBBFA8" stroke-width="3.5"/>
+    <rect x="36" y="82" width="56" height="10" rx="4" fill="#EFE8D8"/>
+    <path d="M32 92 H96 L100 108 H28 Z" fill="#FAF6EE"/>
+    <rect x="24" y="108" width="80" height="8" rx="4" fill="#EFE8D8"/>
+  </g>
+</svg>

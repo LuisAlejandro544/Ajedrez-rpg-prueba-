@@ -1,0 +1,266 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/GameScreen.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/PromotionPopup.tscn" id="2_promo"]
+[ext_resource type="PackedScene" path="res://Scenes/GameOverPopup.tscn" id="3_gameover"]
+[ext_resource type="PackedScene" path="res://Scenes/RulesPopup.tscn" id="4_rules"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar"]
+bg_color = Color(0.168627, 0.133333, 0.109804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37, 0.28, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_board_frame"]
+bg_color = Color(0.24, 0.17, 0.12, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47, 0.34, 0.22, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.25, 0.19, 0.15, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.34, 0.24, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
+bg_color = Color(0.29, 0.22, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831373, 0.635294, 0.305882, 0.7)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[node name="GameScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.105882, 0.0823529, 0.0705882, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 18
+
+[node name="RootVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopNav" type="HBoxContainer" parent="MarginContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnMenu" type="Button" parent="MarginContainer/RootVBox/TopNav"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Menu"
+
+[node name="StatusBadge" type="PanelContainer" parent="MarginContainer/RootVBox/TopNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_status")
+
+[node name="LblTurnStatus" type="Label" parent="MarginContainer/RootVBox/TopNav/StatusBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.88, 0.71, 1)
+theme_override_font_sizes/font_size = 20
+text = "Tu turno"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BtnRestart" type="Button" parent="MarginContainer/RootVBox/TopNav"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Reiniciar"
+
+[node name="CpuPanel" type="PanelContainer" parent="MarginContainer/RootVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bar")
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/RootVBox/CpuPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblCpuName" type="Label" parent="MarginContainer/RootVBox/CpuPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.86, 0.78, 1)
+theme_override_font_sizes/font_size = 18
+text = "CPU (Medio) • Negras"
+
+[node name="CpuCapturedBox" type="HBoxContainer" parent="MarginContainer/RootVBox/CpuPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="LblCpuAdvantage" type="Label" parent="MarginContainer/RootVBox/CpuPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87, 0.67, 0.32, 1)
+theme_override_font_sizes/font_size = 18
+text = ""
+
+[node name="BoardAspect" type="AspectRatioContainer" parent="MarginContainer/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+ratio = 1.0
+stretch_mode = 2
+
+[node name="BoardFrame" type="PanelContainer" parent="MarginContainer/RootVBox/BoardAspect"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_board_frame")
+
+[node name="BoardGrid" type="GridContainer" parent="MarginContainer/RootVBox/BoardAspect/BoardFrame"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 8
+
+[node name="PlayerPanel" type="PanelContainer" parent="MarginContainer/RootVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bar")
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/RootVBox/PlayerPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblPlayerName" type="Label" parent="MarginContainer/RootVBox/PlayerPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.88, 0.71, 1)
+theme_override_font_sizes/font_size = 18
+text = "Tu • Blancas"
+
+[node name="PlayerCapturedBox" type="HBoxContainer" parent="MarginContainer/RootVBox/PlayerPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="LblPlayerAdvantage" type="Label" parent="MarginContainer/RootVBox/PlayerPanel/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87, 0.67, 0.32, 1)
+theme_override_font_sizes/font_size = 18
+text = ""
+
+[node name="HistoryPanel" type="PanelContainer" parent="MarginContainer/RootVBox"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bar")
+
+[node name="Scroll" type="ScrollContainer" parent="MarginContainer/RootVBox/HistoryPanel"]
+layout_mode = 2
+
+[node name="LblMoveHistory" type="Label" parent="MarginContainer/RootVBox/HistoryPanel/Scroll"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(580, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.76, 0.68, 1)
+theme_override_font_sizes/font_size = 16
+text = "Sin jugadas todavia."
+autowrap_mode = 3
+
+[node name="BottomActions" type="HBoxContainer" parent="MarginContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnUndo" type="Button" parent="MarginContainer/RootVBox/BottomActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Deshacer Jugada"
+
+[node name="BtnGameRules" type="Button" parent="MarginContainer/RootVBox/BottomActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Reglas"
+
+[node name="PromotionPopup" parent="." instance=ExtResource("2_promo")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="GameOverPopup" parent="." instance=ExtResource("3_gameover")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="GameRulesPopup" parent="." instance=ExtResource("4_rules")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1

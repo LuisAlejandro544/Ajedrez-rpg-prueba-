@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+godot_chess/.godot/
+godot_chess/android/
+godot_chess/bin/
+godot_chess/obj/

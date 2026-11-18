@@ -1,0 +1,295 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/MainMenu.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Pieces/w_king.svg" id="2_wking"]
+[ext_resource type="Texture2D" path="res://Assets/Pieces/b_queen.svg" id="3_bqueen"]
+[ext_resource type="Texture2D" path="res://Assets/Pieces/w_pawn.svg" id="4_wpawn"]
+[ext_resource type="Texture2D" path="res://Assets/Pieces/b_pawn.svg" id="5_bpawn"]
+[ext_resource type="PackedScene" path="res://Scenes/RulesPopup.tscn" id="6_rules"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.168627, 0.133333, 0.109804, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.41, 0.31, 0.21, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 22.0
+content_margin_top = 20.0
+content_margin_right = 22.0
+content_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_opt_normal"]
+bg_color = Color(0.24, 0.19, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.36, 0.28, 0.21, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_opt_pressed"]
+bg_color = Color(0.45, 0.33, 0.17, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.87, 0.67, 0.32, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cta"]
+bg_color = Color(0.831373, 0.635294, 0.305882, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 18.0
+content_margin_top = 16.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.105882, 0.0823529, 0.0705882, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 36
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MainColumn" type="VBoxContainer" parent="MarginContainer/CenterContainer"]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="HeroHeader" type="PanelContainer" parent="MarginContainer/CenterContainer/MainColumn"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EmblemRow" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="KingIcon" type="TextureRect" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader/VBox/EmblemRow"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+texture = ExtResource("2_wking")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QueenIcon" type="TextureRect" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader/VBox/EmblemRow"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+texture = ExtResource("3_bqueen")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.88, 0.71, 1)
+theme_override_font_sizes/font_size = 38
+text = "AJEDREZ TACTICO"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="MarginContainer/CenterContainer/MainColumn/HeroHeader/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.69, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+text = "Reglas oficiales • Piezas SVG • IA CPU local"
+horizontal_alignment = 1
+
+[node name="ConfigCard" type="PanelContainer" parent="MarginContainer/CenterContainer/MainColumn"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LblSide" type="Label" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.85, 0.69, 1)
+theme_override_font_sizes/font_size = 22
+text = "Elige tu bando"
+
+[node name="ColorButtons" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnWhite" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/ColorButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Blancas"
+icon = ExtResource("4_wpawn")
+expand_icon = true
+
+[node name="BtnRandom" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/ColorButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Aleatorio"
+
+[node name="BtnBlack" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/ColorButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Negras"
+icon = ExtResource("5_bpawn")
+expand_icon = true
+
+[node name="LblDiff" type="Label" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.85, 0.69, 1)
+theme_override_font_sizes/font_size = 22
+text = "Nivel de la CPU"
+
+[node name="DiffButtons" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnEasy" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/DiffButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Facil"
+
+[node name="BtnMedium" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/DiffButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Medio"
+
+[node name="BtnHard" type="Button" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox/DiffButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opt_pressed")
+text = "Dificil"
+
+[node name="LblDifficultyDesc" type="Label" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.72, 0.64, 1)
+theme_override_font_sizes/font_size = 17
+text = "CPU equilibrada (profundidad 3): responde tacticas basicas."
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+layout_mode = 2
+
+[node name="ChkHints" type="CheckButton" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+button_pressed = true
+text = "Mostrar sugerencias de jugadas legales"
+
+[node name="ChkCoords" type="CheckButton" parent="MarginContainer/CenterContainer/MainColumn/ConfigCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+button_pressed = true
+text = "Mostrar coordenadas del tablero (a-h, 1-8)"
+
+[node name="Actions" type="VBoxContainer" parent="MarginContainer/CenterContainer/MainColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnPlay" type="Button" parent="MarginContainer/CenterContainer/MainColumn/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.11, 0.08, 0.06, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_cta")
+text = "Jugar Partida"
+
+[node name="BtnRules" type="Button" parent="MarginContainer/CenterContainer/MainColumn/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_opt_normal")
+text = "Ver Reglas Especiales"
+
+[node name="RulesPopup" parent="." instance=ExtResource("6_rules")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1

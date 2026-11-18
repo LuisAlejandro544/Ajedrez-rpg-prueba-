@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g stroke="#110F12" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Remate superior -->
+    <circle cx="64" cy="20" r="6" fill="#2A262E"/>
+    <!-- Mitra -->
+    <path d="M64 26 C42 40, 36 66, 46 84 H82 C92 66, 86 40, 64 26 Z" fill="#2A262E"/>
+    <!-- Cruz interior clara -->
+    <path d="M55 56 H73 M64 47 V65" fill="none" stroke="#E7DEC8" stroke-width="3.5"/>
+    <path d="M74 39 L58 55" fill="none" stroke="#8C837A" stroke-width="2.5"/>
+    <!-- Collar y base -->
+    <rect x="40" y="84" width="48" height="9" rx="4" fill="#3B3540"/>
+    <path d="M32 93 H96 L100 108 H28 Z" fill="#2A262E"/>
+    <rect x="24" y="108" width="80" height="8" rx="4" fill="#3B3540"/>
+  </g>
+</svg>

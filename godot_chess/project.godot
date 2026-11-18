@@ -1,0 +1,34 @@
+; Archivo de configuracion principal de Godot Engine 4.7 (.NET / C#)
+; Define la escena inicial, el singleton global (Autoload), la resolucion adaptada a movil
+; y el renderizador Mobile compatible con dispositivos Android de 32 y 64 bits.
+
+config_version=5
+
+[application]
+
+config/name="Ajedrez Tactico"
+config/description="Juego de ajedrez clasico con reglas completas, piezas SVG e inteligencia artificial local en C#."
+run/main_scene="res://Scenes/MainMenu.tscn"
+config/features=PackedStringArray("4.7", "C#", "Mobile")
+config/icon="res://Assets/Icons/app_icon.svg"
+
+[autoload]
+
+GameConfig="*res://Scripts/UI/GameConfig.cs"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[dotnet]
+
+project/assembly_name="AjedrezGodot"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g stroke="#110F12" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Silueta del caballo -->
+    <path d="M40 94 C40 76, 48 68, 56 60 C50 61, 40 65, 34 62 C28 59, 26 52, 32 45 L46 30 L48 20 L58 26 C72 22, 90 32, 94 52 C97 66, 94 82, 88 94 Z" fill="#2A262E"/>
+    <!-- Crin y ojo en tono claro -->
+    <path d="M68 34 C80 42, 85 58, 82 86" fill="none" stroke="#E7DEC8" stroke-width="3"/>
+    <circle cx="48" cy="40" r="2.6" fill="#E7DEC8" stroke="none"/>
+    <circle cx="35" cy="54" r="1.8" fill="#E7DEC8" stroke="none"/>
+    <!-- Base -->
+    <rect x="34" y="94" width="60" height="10" rx="4" fill="#3B3540"/>
+    <rect x="26" y="106" width="76" height="10" rx="4" fill="#2A262E"/>
+  </g>
+</svg>

@@ -1,0 +1,238 @@
+# ==============================================================================
+# Flujo de GitHub Actions: Compilar APK Debug de Godot 4.7 (.NET / C#)
+#
+# Logica del flujo:
+#   1. Activacion EXCLUSIVAMENTE manual mediante 'workflow_dispatch' (sin triggers
+#      en push ni pull_request).
+#   2. Cachea dependencias NuGet de C#, el binario/plantillas de Godot .NET
+#      y los caches de Gradle para acelerar compilaciones futuras.
+#   3. Configura JDK 17, .NET 8 SDK, Android SDK y un debug.keystore automatico.
+#   4. Instala la plantilla Android (android_source.zip) requerida por C#/.NET,
+#      pre-importa los recursos .svg y exporta el APK en modo Debug.
+#   5. Publica el APK resultante como artefacto descargable desde GitHub.
+# ==============================================================================
+
+name: Compilar APK Debug (Godot C#)
+
+on:
+  workflow_dispatch:
+    inputs:
+      godot_version:
+        description: "Version exacta de Godot .NET (ej. 4.7.2-stable)"
+        required: true
+        default: "4.7.2-stable"
+        type: string
+
+env:
+  GODOT_VERSION: ${{ inputs.godot_version || '4.7.2-stable' }}
+  PROJECT_DIR: godot_chess
+  PRESET_NAME: "Android Debug"
+  APK_FILENAME: "AjedrezTactico-debug.apk"
+
+jobs:
+  build-android-debug:
+    name: Exportar APK Debug (32 y 64 bits)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar codigo del repositorio
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # 2. Calcular carpeta de plantillas (ej. 4.7.2-stable -> 4.7.2.stable.mono)
+      - name: Calcular version de plantillas Godot
+        id: godot-meta
+        shell: bash
+        run: |
+          TEMPLATE_VERSION="$(echo "${GODOT_VERSION}" | sed 's/-/./').mono"
+          MAJOR_MINOR="$(echo "${GODOT_VERSION}" | cut -d. -f1,2)"
+          echo "template_version=${TEMPLATE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "major_minor=${MAJOR_MINOR}" >> "$GITHUB_OUTPUT"
+          echo "Plantillas destino: ${TEMPLATE_VERSION} (Editor ${MAJOR_MINOR})"
+
+      # 3. Instalar JDK 17 (requerido por Gradle y herramientas de firma Android)
+      - name: Configurar Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      # 4. Instalar .NET 8 SDK para compilar el proyecto C#
+      - name: Configurar .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      # 5. Cache de dependencias NuGet de C#
+      - name: Cachear dependencias NuGet de C#
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ env.GODOT_VERSION }}-${{ hashFiles('godot_chess/**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ env.GODOT_VERSION }}-
+            ${{ runner.os }}-nuget-
+
+      # 6. Cache de Gradle para acelerar compilacion Android
+      - name: Cachear dependencias Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ env.GODOT_VERSION }}-${{ hashFiles('godot_chess/export_presets.cfg', 'godot_chess/project.godot') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ env.GODOT_VERSION }}-
+            ${{ runner.os }}-gradle-
+
+      # 7. Cache de Godot .NET (editor headless + plantillas de exportacion)
+      - name: Cachear Godot .NET y plantillas
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/godot-ci
+            ~/.local/share/godot/export_templates
+          key: ${{ runner.os }}-godot-mono-${{ env.GODOT_VERSION }}
+
+      # 8. Descargar Godot .NET y plantillas solo si no estan en cache
+      - name: Descargar Godot .NET y plantillas de exportacion
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          CACHE_DIR="${HOME}/.cache/godot-ci/${GODOT_VERSION}"
+          TEMPLATE_DIR="${HOME}/.local/share/godot/export_templates/${{ steps.godot-meta.outputs.template_version }}"
+          mkdir -p "${CACHE_DIR}" "${TEMPLATE_DIR}"
+
+          EDITOR_ZIP="Godot_v${GODOT_VERSION}_mono_linux_x86_64.zip"
+          TEMPLATES_TPZ="Godot_v${GODOT_VERSION}_mono_export_templates.tpz"
+
+          PRIMARY_URL="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}"
+          FALLBACK_URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+
+          echo "Descargando editor Godot .NET: ${EDITOR_ZIP}"
+          curl -fL --retry 3 --retry-delay 5 -o "${CACHE_DIR}/${EDITOR_ZIP}" "${PRIMARY_URL}/${EDITOR_ZIP}" || \
+            curl -fL --retry 3 --retry-delay 5 -o "${CACHE_DIR}/${EDITOR_ZIP}" "${FALLBACK_URL}/${EDITOR_ZIP}"
+
+          echo "Descargando plantillas Godot .NET: ${TEMPLATES_TPZ}"
+          curl -fL --retry 3 --retry-delay 5 -o "${CACHE_DIR}/${TEMPLATES_TPZ}" "${PRIMARY_URL}/${TEMPLATES_TPZ}" || \
+            curl -fL --retry 3 --retry-delay 5 -o "${CACHE_DIR}/${TEMPLATES_TPZ}" "${FALLBACK_URL}/${TEMPLATES_TPZ}"
+
+          unzip -q -o "${CACHE_DIR}/${EDITOR_ZIP}" -d "${CACHE_DIR}/editor"
+          rm -f "${CACHE_DIR}/${EDITOR_ZIP}"
+
+          mkdir -p "${CACHE_DIR}/tpl_tmp"
+          unzip -q -o "${CACHE_DIR}/${TEMPLATES_TPZ}" -d "${CACHE_DIR}/tpl_tmp"
+          mv "${CACHE_DIR}/tpl_tmp/templates/"* "${TEMPLATE_DIR}/"
+          rm -rf "${CACHE_DIR}/tpl_tmp" "${CACHE_DIR}/${TEMPLATES_TPZ}"
+
+      # 9. Enlazar binario de Godot al PATH e instalar plantilla Gradle Android
+      - name: Instalar binario de Godot y plantilla Android en el proyecto
+        shell: bash
+        run: |
+          set -euo pipefail
+          EDITOR_BIN=$(find "${HOME}/.cache/godot-ci/${GODOT_VERSION}/editor" -type f \( -name "Godot_v*mono_linux.x86_64" -o -name "Godot_v*mono_linux_x86_64" \) | head -n 1)
+          if [ -z "${EDITOR_BIN}" ]; then
+            echo "Error: No se encontro el binario de Godot .NET en cache."
+            exit 1
+          fi
+          chmod +x "${EDITOR_BIN}"
+          sudo ln -sf "${EDITOR_BIN}" /usr/local/bin/godot
+          godot --version
+
+          TEMPLATE_DIR="${HOME}/.local/share/godot/export_templates/${{ steps.godot-meta.outputs.template_version }}"
+          mkdir -p "${PROJECT_DIR}/android/build"
+          unzip -q -o "${TEMPLATE_DIR}/android_source.zip" -d "${PROJECT_DIR}/android/build/"
+          echo "${{ steps.godot-meta.outputs.template_version }}" > "${PROJECT_DIR}/android/.build_version"
+
+      # 10. Restaurar dependencias de C# (.csproj) incluyendo runtimes Android 32 y 64 bits en cache NuGet
+      - name: Restaurar dependencias C# (.NET y Android RIDs)
+        shell: bash
+        run: |
+          dotnet restore "${PROJECT_DIR}/AjedrezGodot.csproj"
+          dotnet restore "${PROJECT_DIR}/AjedrezGodot.csproj" -r android-arm
+          dotnet restore "${PROJECT_DIR}/AjedrezGodot.csproj" -r android-arm64
+
+      # 11. Preparar Android SDK, aceptar licencias y crear debug.keystore
+      - name: Configurar Android SDK y debug.keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_PATH="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "ANDROID_SDK_PATH=${SDK_PATH}" >> "$GITHUB_ENV"
+
+          if [ -x "${SDK_PATH}/cmdline-tools/latest/bin/sdkmanager" ]; then
+            SDKMANAGER="${SDK_PATH}/cmdline-tools/latest/bin/sdkmanager"
+          else
+            SDKMANAGER="$(find "${SDK_PATH}" -name sdkmanager -type f | head -n 1)"
+          fi
+
+          yes | "${SDKMANAGER}" --licenses >/dev/null || true
+          "${SDKMANAGER}" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+          KEYSTORE_PATH="${HOME}/.local/share/godot/debug.keystore"
+          mkdir -p "$(dirname "${KEYSTORE_PATH}")"
+          if [ ! -f "${KEYSTORE_PATH}" ]; then
+            keytool -genkey -v \
+              -keystore "${KEYSTORE_PATH}" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          echo "DEBUG_KEYSTORE_PATH=${KEYSTORE_PATH}" >> "$GITHUB_ENV"
+
+      # 12. Escribir configuracion de Android/Java/Keystore en editor_settings de Godot
+      - name: Configurar rutas Android/Java en Godot Editor Settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Inicializar carpeta de configuracion e importar recursos SVG del proyecto
+          godot --headless --path "${PROJECT_DIR}" --editor --quit || true
+
+          SETTINGS_DIR="${HOME}/.config/godot"
+          mkdir -p "${SETTINGS_DIR}"
+          SETTINGS_FILE="${SETTINGS_DIR}/editor_settings-${{ steps.godot-meta.outputs.major_minor }}.tres"
+          if [ ! -f "${SETTINGS_FILE}" ]; then
+            printf '%s\n\n%s\n' '[gd_resource type="EditorSettings" format=3]' '[resource]' > "${SETTINGS_FILE}"
+          fi
+
+          # Eliminar configuraciones previas si existen y agregar las rutas exactas del runner
+          grep -v -E '^export/android/(android_sdk_path|java_sdk_path|debug_keystore|debug_keystore_user|debug_keystore_pass) =' "${SETTINGS_FILE}" > "${SETTINGS_FILE}.tmp" || true
+          mv "${SETTINGS_FILE}.tmp" "${SETTINGS_FILE}"
+          printf '%s\n' \
+            "export/android/android_sdk_path = \"${ANDROID_SDK_PATH}\"" \
+            "export/android/java_sdk_path = \"${JAVA_HOME}\"" \
+            "export/android/debug_keystore = \"${DEBUG_KEYSTORE_PATH}\"" \
+            "export/android/debug_keystore_user = \"androiddebugkey\"" \
+            "export/android/debug_keystore_pass = \"android\"" >> "${SETTINGS_FILE}"
+
+      # 13. Exportar el APK en modo Debug (incluye compilacion C# + Gradle)
+      - name: Compilar y exportar APK Debug
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${GITHUB_WORKSPACE}/build"
+          OUTPUT_APK="${GITHUB_WORKSPACE}/build/${APK_FILENAME}"
+
+          godot --headless --verbose --path "${PROJECT_DIR}" --export-debug "${PRESET_NAME}" "${OUTPUT_APK}"
+
+          if [ ! -s "${OUTPUT_APK}" ]; then
+            echo "Error: No se genero el archivo APK Debug en ${OUTPUT_APK}"
+            exit 1
+          fi
+          ls -lh "${OUTPUT_APK}"
+
+      # 14. Subir el APK Debug como artefacto descargable en GitHub
+      - name: Subir artefacto APK Debug
+        uses: actions/upload-artifact@v4
+        with:
+          name: ajedrez-tactico-debug-apk
+          path: build/${{ env.APK_FILENAME }}
+          retention-days: 30

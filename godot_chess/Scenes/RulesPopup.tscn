@@ -1,0 +1,101 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/RulesPopup.cs" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.156863, 0.12549, 0.105882, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831373, 0.635294, 0.305882, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 22.0
+content_margin_top = 22.0
+content_margin_right = 22.0
+content_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.831373, 0.635294, 0.305882, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+
+[node name="RulesPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.956863, 0.870588, 0.690196, 1)
+theme_override_font_sizes/font_size = 28
+text = "Reglas del Ajedrez"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+
+[node name="RulesText" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.92, 0.88, 0.82, 1)
+theme_override_font_sizes/font_size = 19
+text = "1. Objetivo: Dar jaque mate al rey enemigo evitando que nuestro rey quede bajo ataque.
+
+2. Enroque (O-O / O-O-O): El rey avanza dos casillas hacia una torre sin haber movido antes ninguno de los dos, sin piezas en medio, y sin estar ni pasar por casillas en jaque.
+
+3. Captura al paso (En Passant): Si un peon avanza dos casillas desde su fila inicial y queda junto a un peon rival, este ultimo puede capturarlo en la jugada inmediatamente siguiente.
+
+4. Coronacion: Cuando un peon alcanza la ultima fila del tablero, debes elegir transformarlo en Dama, Torre, Alfil o Caballo.
+
+5. Tablas: La partida termina en empate por ahogado (sin jugadas legales y sin jaque), regla de 50 jugadas, material insuficiente o triple repeticion de posicion."
+autowrap_mode = 3
+
+[node name="BtnCloseRules" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.11, 0.08, 0.06, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Entendido"

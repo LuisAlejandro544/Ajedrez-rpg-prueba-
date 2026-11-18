@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g stroke="#110F12" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cabeza del peon -->
+    <circle cx="64" cy="38" r="15" fill="#2A262E"/>
+    <!-- Cuello y cuerpo -->
+    <rect x="46" y="53" width="36" height="8" rx="4" fill="#3B3540"/>
+    <path d="M52 61 C50 76, 42 86, 36 96 H92 C86 86, 78 76, 76 61 Z" fill="#2A262E"/>
+    <line x1="48" y1="57" x2="80" y2="57" stroke="#E7DEC8" stroke-width="2"/>
+    <!-- Base -->
+    <rect x="32" y="96" width="64" height="10" rx="4" fill="#3B3540"/>
+    <rect x="26" y="106" width="76" height="10" rx="4" fill="#2A262E"/>
+  </g>
+</svg>
